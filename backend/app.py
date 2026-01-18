@@ -7,7 +7,7 @@ import pdfplumber
 load_dotenv()
 
 GROQ_API_KEY = os.getenv('GROQ_API_KEY')
-PORT = int(os.getenv('PORT', 5001))
+PORT = int(os.environ.get("PORT", 5001))  
 LABELS = ["Produtivo", "Improdutivo"]
 
 from groq import Groq
@@ -126,4 +126,5 @@ def classify():
         }), 500
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=PORT)
+    # Na Render, a PORT vem da env, obrigatoriamente!
+    app.run(debug=False, host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))

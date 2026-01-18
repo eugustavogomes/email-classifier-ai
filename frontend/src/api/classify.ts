@@ -1,7 +1,7 @@
 const API_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:5001/classify"
-    : "/classify";
+    : "/api/classify";
 
 export async function classifyEmail(
   text: string,
