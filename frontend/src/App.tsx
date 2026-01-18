@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useState, type ChangeEvent } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import MainForm from "./components/MainForm";
@@ -10,25 +10,21 @@ export default function App() {
   const [text, setText] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [showHistory, setShowHistory] = useState(false);
-
   const { result, setResult, loading, classify, history } = useClassifyEffect();
-
   const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
-    setFile(null);
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setFile(e.target.files[0]);
-      setText("");
     }
   };
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    await classify(text, file);
-  };
+function handleSubmit(e: React.FormEvent) {
+  e.preventDefault();
+  classify(text, file); 
+}
 
   const handleClear = () => {
     setText("");

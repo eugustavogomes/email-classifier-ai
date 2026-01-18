@@ -7,10 +7,10 @@ export default function Header() {
         </svg>
       </div>
       <h1 className="text-4xl font-bold text-gray-800 mb-2">
-        Smart Email Classifier
+        Classificador Inteligente de Emails
       </h1>
       <p className="text-gray-600 text-lg">
-        Automatic AI analysis • Save time • Suggested replies
+        Análise automática com IA • Economia de tempo • Respostas sugeridas
       </p>
     </div>
   );

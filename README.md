@@ -1,78 +1,109 @@
 # Email Classifier AI
 
-This is a fullstack application with a React + TypeScript + Vite frontend and a Python Flask backend.  
-It classifies emails (plain text or PDF) as "Produtivo" (Action Required) or "Improdutivo" (No Action) in Portuguese, using the Groq LLM API.  
-The backend exposes a REST API, and the frontend provides an interface for users to upload or paste email content.
+![Vercel](https://email-classifier-ai-hazel.vercel.app/)
+![Render](https://email-classifier-ai-ksbw.onrender.com)
+
+> Classifica automaticamente emails de texto ou PDF como “Produtivo” ou “Improdutivo” usando IA Groq LLM. Interface web em React + Vite, backend Flask robusto para seu setor financeiro.
 
 ---
 
 ## Features
 
-- **Frontend:** React + TypeScript + Vite for a fast UI.
-- **Backend:** Flask Python API to classify emails (with PDF support).
-- **AI Model:** Uses Groq LLM API (such as Llama3 or similar large language models).
-- **CORS enabled** for development.
-- **Environment Variables:** Secrets and keys **never** live in versioned code.
+- **Classificação via IA:** Utiliza Groq LLM (ex: Llama 3).
+- **Frontend:** React + TypeScript + Vite, experiência rápida.
+- **Backend:** Python Flask REST API com suporte a PDFs.
+- **CORS** habilitado.
+- **Secrets e keys** sempre por variável de ambiente.
 
 ---
 
-## How to run
+## Architecture
 
-### 1. Backend
+```
+React (Vercel)  <--REST-->  Flask API (Render)  <--API-->  Groq LLM
+```
 
-- Requirements: `python >= 3.8`
-- Install dependencies:
-  ```bash
-  pip install -r backend/requirements.txt
-  ```
-- Copy `.env.sample` to `.env` in the backend folder and add your [Groq API Key](https://console.groq.com/keys):
-  ```
-  GROQ_API_KEY=your-groq-api-key
-  PORT=5001
-  ```
-- Start backend:
-  ```bash
-  python backend/app.py
-  ```
+---
 
-### 2. Frontend
+## Getting Started
 
-- Requirements: `node >= 16`
-- Install dependencies:
-  ```bash
-  cd frontend
-  npm install
-  ```
-- Start dev server:
-  ```bash
-  npm run dev
-  ```
-- By default, the frontend expects the backend at `http://localhost:5001`.
+### Backend
+
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+cp .env.sample .env  # Adicione sua GROQ_API_KEY!
+python app.py
+```
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+O frontend espera a API em `http://localhost:5001/classify` em dev.
 
 ---
 
 ## Deploy
 
-- Edit production environment variables through your cloud provider (e.g., Vercel).
-- **Never commit secrets in code or in config files!**
-- For Vercel, set up the env vars in the dashboard.
+### Backend (Render)
+- ‘Root Directory’: `backend`
+- Start Command: `gunicorn app:app`
+- Configure env: `GROQ_API_KEY`
+- URL: `https://<nome>.onrender.com/classify`
+
+### Frontend (Vercel)
+- Deploy da pasta `frontend`
+- Adicione (se quiser):
+    ```
+    VITE_API_URL=https://<nome>.onrender.com/classify
+    ```
 
 ---
 
 ## API
 
-- **POST** `/classify`
-  - Content-Type: JSON or multipart/form for files
-  - Body (JSON): `{ "texto": "email content" }` or attach a PDF file
-  - Response:
+**POST** `/classify`
+
+- **Body (JSON):**
+    ```json
+    { "texto": "email content" }
+    ```
+- **Body (Form):** arquivo PDF com field `"file"`
+- **Response:**
     ```json
     {
-      "categoria": "Produtivo" | "Improdutivo",
-      "confianca": 0.0..1.0,
-      "motivo": "short explanation",
-      "resposta": "auto-reply text",
-      "stats": { ... }
+      "categoria": "Produtivo",
+      "confianca": 0.92,
+      "motivo": "Texto indica solicitação de informações",
+      "resposta": "Recebemos sua solicitação...",
+      "stats": {
+        "total_palavras": 12,
+        "palavras_relevantes": 9,
+        "idioma": "pt"
+      }
     }
     ```
 
 ---
+
+## CLI Example
+
+```bash
+curl -X POST https://<backend-url>.onrender.com/classify \
+  -H "Content-Type: application/json" \
+  -d '{"texto": "Preciso de informações sobre boleto."}'
+```
+
+---
+
+## Troubleshooting
+
+- **401 Unauthorized:** Verifique a `GROQ_API_KEY` e redeploy o backend.
+- **CORS?** Verifique se o backend possui `flask_cors` e restart o serviço.
+- **Frontend Not Working:** Confira se a API_URL está correta!

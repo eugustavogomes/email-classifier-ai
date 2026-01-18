@@ -14,7 +14,7 @@ export default function History({ history, show, setShow }: Props) {
         onClick={() => setShow(!show)}
         className="w-full flex items-center justify-between p-4 bg-white rounded-lg shadow hover:shadow-md transition-all duration-300"
       >
-        <span className="font-semibold text-gray-700">📊 Analyses History ({history.length})</span>
+        <span className="font-semibold text-gray-700">📊 Histórico de Análises ({history.length})</span>
         <svg
           className={`w-5 h-5 text-gray-500 transform transition-transform ${show ? "rotate-180" : ""}`}
           fill="none"
