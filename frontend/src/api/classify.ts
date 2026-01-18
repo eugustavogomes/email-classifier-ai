@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5001/classify";
+const API_URL = "/api/classify";
 
 export async function classifyEmail(
   text: string,
