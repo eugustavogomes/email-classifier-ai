@@ -76,6 +76,10 @@ def home():
         "version": "Groq"
     })
 
+@app.route("/ping")
+def ping():
+    return jsonify({"message": "pong"}), 200
+
 @app.route("/health")
 def health():
     return jsonify({"status": "healthy"}), 200
