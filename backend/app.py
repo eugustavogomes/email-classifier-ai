@@ -3,11 +3,12 @@ from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
+from service.nlp_preprocessing import preprocess_text
 from service.groq_classifier import extract_text_from_pdf, classify_with_groq
 from service.auto_reply import generate_response
 
 load_dotenv()
-PORT = int(os.environ.get("PORT", 5000))
+PORT = int(os.environ.get("PORT", 5001))
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
@@ -58,7 +59,9 @@ def classify():
         else:
             return jsonify({"erro": "Nenhum texto fornecido."}), 400
 
-        resultado = classify_with_groq(texto_email)
+        texto_email_preprocessado = preprocess_text(texto_email)
+
+        resultado = classify_with_groq(texto_email_preprocessado)
         categoria = resultado.get('categoria', '')
         confianca = resultado.get('confianca')
         motivo = resultado.get('motivo', '')
@@ -76,6 +79,7 @@ def classify():
             }
         }), 200
     except Exception as e:
+        print("Erro interno no backend:", e)
         return jsonify({
             "erro": f"Erro: {str(e)}",
             "categoria": "",
