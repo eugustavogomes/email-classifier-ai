@@ -5,7 +5,6 @@ from flask_cors import CORS
 
 from service.nlp_preprocessing import preprocess_text
 from service.groq_classifier import extract_text_from_pdf, classify_with_groq
-from service.auto_reply import generate_response
 
 load_dotenv()
 PORT = int(os.environ.get("PORT", 5001))
@@ -65,7 +64,9 @@ def classify():
         categoria = resultado.get('categoria', '')
         confianca = resultado.get('confianca')
         motivo = resultado.get('motivo', '')
-        resposta = generate_response(categoria)
+
+        from service.groq_classifier import generate_contextual_reply
+        resposta = generate_contextual_reply(texto_email, categoria)
 
         return jsonify({
             "categoria": categoria,

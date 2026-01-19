@@ -1,3 +1,27 @@
+def generate_contextual_reply(texto_email, categoria):
+  
+    if not groq_client:
+        raise ValueError("GROQ_API_KEY não configurada! Preencha no painel/env.")
+
+    prompt = f'''
+    Você é um assistente corporativo do setor financeiro. Responda ao e-mail abaixo de forma educada, curta (máx. 3 frases), em português, considerando que ele foi classificado como "{categoria}".
+
+    Importante: NÃO inclua assinatura, nomes, nem placeholders como "[Seu Nome]" ou similares. Apenas responda ao conteúdo do e-mail, terminando a resposta de forma natural e humana, sem assinatura.
+
+    E-mail:
+    {texto_email}
+
+    Responda apenas com o texto da resposta sugerida, sem explicações ou comentários.
+    '''
+
+    response = groq_client.chat.completions.create(
+        model="llama-3.1-8b-instant",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.5,
+        max_tokens=200
+    )
+    resposta = response.choices[0].message.content.strip()
+    return resposta
 import os
 from dotenv import load_dotenv
 import pdfplumber
