@@ -1,7 +1,7 @@
 # Email Classifier AI
 > Classifica automaticamente emails de texto ou PDF como “Produtivo” ou “Improdutivo” usando IA Groq LLM. Interface web em React + Vite, backend Flask robusto para seu setor financeiro.
 
-<div align="center">
+<div align="start">
   <img src="./Assets/ProjectImage.png" alt="Email Classifier Image" width="600"/>
 </div>
 
